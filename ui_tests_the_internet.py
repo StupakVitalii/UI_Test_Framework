@@ -153,3 +153,38 @@ class TestTheInternetWebsite:
         self.driver.switch_to.default_content()
         assert self.driver.find_element(By.XPATH, "//div[@class='example']/h3").text == ('An iFrame containing the '
                                                                                          'TinyMCE WYSIWYG Editor')
+    def test_key_presses(self):
+        self.driver.get(URL)
+        self.driver.find_element(By.XPATH,"//a[@href='/key_presses']").click()
+        input_element = self.driver.find_element(By.XPATH,"//input[@id='target']")
+        output_element = self.driver.find_element(By.XPATH, "//p[@id='result']")
+        input_element.send_keys('K')
+        assert input_element.get_attribute('value') == 'K'
+        assert output_element.text == 'You entered: K'
+        self.driver.refresh()
+
+    def test_redirection(self):
+        self.driver.get(URL)
+        self.driver.find_element(By.XPATH, "//a[@href='/redirector']").click()
+        self.driver.find_element(By.XPATH, "//a[@id='redirect']").click()
+        assert self.driver.find_element(By.XPATH, "//div[@class='example']/h3").text == 'Status Codes'
+        self.driver.refresh()
+
+    def test_status_codes(self):
+        self.driver.get(URL)
+        self.driver.find_element(By.XPATH, "//a[@href='/redirector']").click()
+        self.driver.find_element(By.XPATH, "//a[@id='redirect']").click()
+        self.driver.find_element(By.XPATH, "//a[@href='status_codes/200']").click()
+        assert self.driver.find_element(By.XPATH, "//div[@class='example']/p").text == ('This page returned a 200 status code.\n''\n' 'For a definition and common list of HTTP status codes, go here')
+        self.driver.find_element(By.XPATH, "//a[@href='/status_codes']").click()
+        self.driver.find_element(By.XPATH, "//a[@href='status_codes/301']").click()
+        assert self.driver.find_element(By.XPATH, "//div[@class='example']/p").text == ('This page returned a 301 status code.\n''\n' 'For a definition and common list of HTTP status codes, go here')
+        self.driver.find_element(By.XPATH, "//a[@href='/status_codes']").click()
+        self.driver.find_element(By.XPATH, "//a[@href='status_codes/404']").click()
+        assert self.driver.find_element(By.XPATH, "//div[@class='example']/p").text == ('This page returned a 404 status code.\n''\n' 'For a definition and common list of HTTP status codes, go here')
+        self.driver.find_element(By.XPATH, "//a[@href='/status_codes']").click()
+        self.driver.find_element(By.XPATH, "//a[@href='status_codes/500']").click()
+        assert self.driver.find_element(By.XPATH, "//div[@class='example']/p").text == ('This page returned a 500 status code.\n''\n' 'For a definition and common list of HTTP status codes, go here')
+        self.driver.refresh()
+
+
